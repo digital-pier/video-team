@@ -1,0 +1,10 @@
+.env
+.DS_Store
+__pycache__/
+# Generated media (keep the plans, ignore the heavy files)
+videos/*/images/
+videos/*/clips/
+videos/*/audio/
+videos/*/renders/
+videos/*/edit/.build/
+videos/*/publish/*.png
