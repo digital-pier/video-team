@@ -53,6 +53,6 @@ Every stage ends at a gate. The team rebuilds `videos/<slug>/review/index.html` 
 - Channel-wide voice/brand/audience notes: add `channel/*.md` — every agent loads them.
 - Change an agent's persona, principles or menu: `custom/<skill-name>.toml` with the same keys as its `customize.toml`.
 
-## Credits
+## License and credits
 
-Agent, menu, customization and party-mode architecture adapted from the BMad Method (MIT, see `LICENSE-BMAD-METHOD`). This project is not affiliated with or endorsed by BMad Code, LLC.
+MIT, see `LICENSE`. Derived from the MIT-licensed [BMAD-METHOD](https://github.com/bmad-code-org/BMAD-METHOD) by BMad Code, LLC (its license is in `LICENSE-BMAD-METHOD`): the agent, menu, customization and party-mode architecture is adapted from it. Not affiliated with or endorsed by BMad Code, LLC.
