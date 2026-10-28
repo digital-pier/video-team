@@ -1,6 +1,6 @@
 # Status — Why Octopuses Are So Smart
 
-**Stage:** publish
+**Stage:** done
 **Created:** 2026-10-27
 
 Each stage ends at a review gate. The team does not move past a gate until the human approves it.
@@ -14,10 +14,11 @@ Each stage ends at a review gate. The team does not move past a gate until the h
 | 5 | Audio (VO, SFX, music) | 🎧 Sound Designer | `audio/` | ✅ approved |
 | 6 | Motion clips | 🎥 Motion Designer | `clips/` | ✅ approved |
 | 7 | Edit + render | ✂️ Editor | `edit/timeline.json`, `renders/` | ✅ approved |
-| 8 | Publish pack | 🔎 Strategist | `publish/` | ⬜ approved |
+| 8 | Publish pack | 🔎 Strategist | `publish/` | ✅ approved |
 
 ## Log
 <!-- Newest first. Each entry: date — who — what changed / what the human decided. -->
+- 2026-10-27 — Human — publish pack approved (title 1 + thumbnail A); project done. Open item: swap placeholder music before upload
 - 2026-10-27 — Strategist + Art Director — publish pack written (titles, description, 6 chapters, tags, settings); thumbnails A/B generated — awaiting approval
 - 2026-10-27 — Editor — final-v2 rendered (1920x1080, 2:47)
 - 2026-10-27 — Human — draft-v1 approved; final render requested
