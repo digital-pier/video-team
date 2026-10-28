@@ -84,12 +84,13 @@ Voice: <provider + voice + rate/style> · Music: <file or mood> · SFX palette: 
   "burn_captions": false,
   "scenes": [
     {"id": "s01", "visual": "images/s01.png", "motion": "zoom-in", "vo": "audio/vo/s01.wav",
-     "vo_delay": 0.15, "sfx": [{"file": "audio/sfx/whoosh.wav", "at": 0.0, "volume": 0.7}]}
+     "vo_delay": 0.15, "sfx": [{"file": "audio/sfx/whoosh.wav", "at": 0.0, "volume": 0.7}],
+     "text": [{"content": "9 BRAINS", "position": "left", "start": 0.5, "end": 3.5, "size": 1.0}]}
   ]
 }
 ```
 
-Scene length = VO length + `scene_padding` unless `duration` is set (use `min_duration` for silent scenes). `visual` may be a `.png` (gets a Ken Burns move) or a video file (trimmed/looped). Music is auto-ducked under narration and the mix is loudness-normalized to -14 LUFS.
+Scene length = VO length + `scene_padding` unless `duration` is set (use `min_duration` for silent scenes). `visual` may be a `.png` (gets a Ken Burns move) or a video file (trimmed/looped). `text` overlays (from the script's **On screen** lines) fade in/out between `start`/`end` seconds of the scene; `position` is center | top | bottom | lower-third | left | right; `\n` breaks lines. Music is auto-ducked under narration and the mix is loudness-normalized to -14 LUFS.
 
 ## Toolkit: `uv run tools/vt.py <command>`
 

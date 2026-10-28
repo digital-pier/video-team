@@ -1,0 +1,343 @@
+{
+  "resolution": [
+    1920,
+    1080
+  ],
+  "fps": 30,
+  "fade": 0.25,
+  "scene_padding": 0.4,
+  "music": {
+    "file": "audio/music/bed.wav",
+    "volume": 0.12
+  },
+  "burn_captions": false,
+  "scenes": [
+    {
+      "id": "s01",
+      "visual": "images/s01.png",
+      "motion": "zoom-in",
+      "vo": "audio/vo/s01.wav",
+      "sfx": [
+        {
+          "file": "audio/sfx/rumble.wav",
+          "at": 0.0,
+          "volume": 0.5
+        },
+        {
+          "file": "audio/sfx/impact.wav",
+          "at": 1.4,
+          "volume": 0.6
+        },
+        {
+          "file": "audio/sfx/impact.wav",
+          "at": 2.6,
+          "volume": 0.6
+        }
+      ],
+      "text": [
+        {
+          "content": "9 BRAINS\n3 HEARTS\nBLUE BLOOD",
+          "position": "left",
+          "start": 0.5,
+          "size": 0.85
+        }
+      ]
+    },
+    {
+      "id": "s02",
+      "visual": "images/s02.png",
+      "motion": "zoom-out",
+      "vo": "audio/vo/s02.wav"
+    },
+    {
+      "id": "s03",
+      "visual": "images/s03.png",
+      "motion": "pan-right",
+      "vo": "audio/vo/s03.wav",
+      "sfx": [
+        {
+          "file": "audio/sfx/whoosh.wav",
+          "at": 1.8,
+          "volume": 0.5
+        },
+        {
+          "file": "audio/sfx/whoosh.wav",
+          "at": 3.6,
+          "volume": 0.5
+        }
+      ]
+    },
+    {
+      "id": "s04",
+      "visual": "images/s04.png",
+      "motion": "zoom-out",
+      "vo": "audio/vo/s04.wav",
+      "sfx": [
+        {
+          "file": "audio/sfx/ding.wav",
+          "at": 5.2,
+          "volume": 0.4
+        }
+      ],
+      "text": [
+        {
+          "content": "~500,000,000 NEURONS",
+          "position": "top",
+          "start": 2.6,
+          "size": 0.8
+        }
+      ]
+    },
+    {
+      "id": "s05",
+      "visual": "images/s05.png",
+      "motion": "pan-down",
+      "vo": "audio/vo/s05.wav",
+      "sfx": [
+        {
+          "file": "audio/sfx/shimmer.wav",
+          "at": 1.5,
+          "volume": 0.5
+        }
+      ],
+      "text": [
+        {
+          "content": "2/3 IN THE ARMS",
+          "position": "bottom",
+          "start": 1.6
+        }
+      ]
+    },
+    {
+      "id": "s06",
+      "visual": "images/s06.png",
+      "motion": "pan-left",
+      "vo": "audio/vo/s06.wav",
+      "sfx": [
+        {
+          "file": "audio/sfx/pop.wav",
+          "at": 2.0,
+          "volume": 0.4
+        },
+        {
+          "file": "audio/sfx/pop.wav",
+          "at": 3.2,
+          "volume": 0.4
+        },
+        {
+          "file": "audio/sfx/pop.wav",
+          "at": 4.1,
+          "volume": 0.4
+        }
+      ]
+    },
+    {
+      "id": "s07",
+      "visual": "images/s07.png",
+      "motion": "pan-up",
+      "vo": "audio/vo/s07.wav",
+      "sfx": [
+        {
+          "file": "audio/sfx/rumble.wav",
+          "at": 0.0,
+          "volume": 0.6
+        },
+        {
+          "file": "audio/sfx/impact.wav",
+          "at": 3.0,
+          "volume": 0.5
+        }
+      ],
+      "text": [
+        {
+          "content": "~600 MILLION YEARS AGO",
+          "position": "top",
+          "start": 3.4,
+          "size": 0.8
+        }
+      ]
+    },
+    {
+      "id": "s08",
+      "visual": "images/s08.png",
+      "motion": "zoom-in",
+      "vo": "audio/vo/s08.wav",
+      "sfx": [
+        {
+          "file": "audio/sfx/shimmer.wav",
+          "at": 0.3,
+          "volume": 0.5
+        }
+      ]
+    },
+    {
+      "id": "s09",
+      "visual": "images/s09.png",
+      "motion": "pan-left",
+      "vo": "audio/vo/s09.wav",
+      "sfx": [
+        {
+          "file": "audio/sfx/whoosh.wav",
+          "at": 9.0,
+          "volume": 0.4
+        }
+      ],
+      "text": [
+        {
+          "content": "NEW ZEALAND, 2016",
+          "position": "lower-third",
+          "start": 2.8,
+          "end": 8.0,
+          "size": 0.75
+        }
+      ]
+    },
+    {
+      "id": "s10",
+      "visual": "images/s10.png",
+      "motion": "zoom-in",
+      "vo": "audio/vo/s10.wav",
+      "sfx": [
+        {
+          "file": "audio/sfx/pop.wav",
+          "at": 2.5,
+          "volume": 0.3
+        }
+      ]
+    },
+    {
+      "id": "s11",
+      "visual": "images/s11.png",
+      "motion": "zoom-out",
+      "vo": "audio/vo/s11.wav",
+      "sfx": [
+        {
+          "file": "audio/sfx/shimmer.wav",
+          "at": 2.0,
+          "volume": 0.4
+        },
+        {
+          "file": "audio/sfx/shimmer.wav",
+          "at": 4.5,
+          "volume": 0.4
+        }
+      ]
+    },
+    {
+      "id": "s12",
+      "visual": "images/s12.png",
+      "motion": "zoom-in",
+      "vo": "audio/vo/s12.wav",
+      "sfx": [
+        {
+          "file": "audio/sfx/impact.wav",
+          "at": 1.2,
+          "volume": 0.5
+        }
+      ],
+      "text": [
+        {
+          "content": "PROBABLY COLORBLIND",
+          "position": "top",
+          "start": 1.0,
+          "end": 5.0,
+          "size": 0.9
+        }
+      ]
+    },
+    {
+      "id": "s13",
+      "visual": "images/s13.png",
+      "motion": "zoom-out",
+      "vo": "audio/vo/s13.wav",
+      "sfx": [
+        {
+          "file": "audio/sfx/rumble.wav",
+          "at": 3.5,
+          "volume": 0.5
+        }
+      ]
+    },
+    {
+      "id": "s14",
+      "visual": "images/s14.png",
+      "motion": "pan-right",
+      "vo": "audio/vo/s14.wav",
+      "sfx": [
+        {
+          "file": "audio/sfx/whoosh.wav",
+          "at": 6.0,
+          "volume": 0.4
+        }
+      ]
+    },
+    {
+      "id": "s15",
+      "visual": "images/s15.png",
+      "motion": "zoom-in",
+      "vo": "audio/vo/s15.wav",
+      "sfx": [
+        {
+          "file": "audio/sfx/impact.wav",
+          "at": 8.5,
+          "volume": 0.6
+        }
+      ],
+      "text": [
+        {
+          "content": "INTELLIGENCE = ARMOR",
+          "position": "top",
+          "start": 7.2,
+          "size": 0.9
+        }
+      ]
+    },
+    {
+      "id": "s16",
+      "visual": "images/s16.png",
+      "motion": "pan-up",
+      "vo": "audio/vo/s16.wav",
+      "text": [
+        {
+          "content": "LIFESPAN: 1–2 YEARS",
+          "position": "lower-third",
+          "start": 1.4,
+          "end": 6.0,
+          "size": 0.8
+        }
+      ]
+    },
+    {
+      "id": "s17",
+      "visual": "images/s17.png",
+      "motion": "pan-left",
+      "vo": "audio/vo/s17.wav"
+    },
+    {
+      "id": "s18",
+      "visual": "images/s18.png",
+      "motion": "zoom-out",
+      "vo": "audio/vo/s18.wav",
+      "sfx": [
+        {
+          "file": "audio/sfx/shimmer.wav",
+          "at": 0.5,
+          "volume": 0.4
+        },
+        {
+          "file": "audio/sfx/impact.wav",
+          "at": 9.0,
+          "volume": 0.5
+        }
+      ],
+      "text": [
+        {
+          "content": "SUBSCRIBE",
+          "position": "bottom",
+          "start": 6.4,
+          "size": 1.1
+        }
+      ]
+    }
+  ]
+}

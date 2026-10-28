@@ -11,6 +11,7 @@ Owner: ✂️ Rowan. Input: `storyboard.md`, `images/`, `clips/`, `audio/`. Outp
 2. **Write `edit/timeline.json`** (schema in `{project-root}/CLAUDE.md`):
    - `visual` = `clips/<id>.mp4` when it exists, else `images/<id>.png`; `motion` from the storyboard.
    - `vo` = `audio/vo/<id>.wav`; SFX from the storyboard cues with `at` seconds and volume (0.4-0.8 under narration).
+   - `text` overlays for every **On screen** line in `script.md`, placed where the storyboard notes leave room, timed to the words they echo.
    - `music` = the bed in `audio/music/` at volume ~0.10-0.15. `fade` 0.25, `scene_padding` 0.3-0.6 (tighter for fast-paced videos). Vertical videos: `"resolution": [1080, 1920]`.
    - Preserve any manual tweaks already in an existing timeline unless the human asked to rebuild it.
 3. **Render a draft:** `uv run {project-root}/tools/vt.py render <slug> --draft`. Fix errors yourself (missing file, typo) and re-run.

@@ -10,7 +10,7 @@ Owner: 🎧 Rhea. Input: `script.md`, `storyboard.md` (Audio section, SFX cues).
 1. Read the script and storyboard; run `uv run {project-root}/tools/vt.py doctor` to see which providers are live. If the voice was never chosen, offer a quick audition (sound designer menu `VC`) or use the storyboard's choice.
 2. **Voiceover.** For each scene write the VO text verbatim from `script.md` to `videos/<slug>/audio/vo/<id>.txt`, then:
    `uv run {project-root}/tools/vt.py voice --text-file videos/<slug>/audio/vo/<id>.txt --out videos/<slug>/audio/vo/<id>.wav [--voice V] [--rate N] [--style "<delivery>"]`
-   Use the same voice settings for every scene. Collect durations and compare the total with the target length; flag any scene over ~20 s.
+   Use the same voice settings for every scene. Run at most 3 ElevenLabs requests in parallel (plan concurrency limit; the toolkit retries on 429). Collect durations and compare the total with the target length; flag any scene over ~20 s.
 3. **SFX.** Make each sound in the storyboard's SFX palette once, named for what it is (`whoosh.wav`, `impact.wav`):
    `uv run {project-root}/tools/vt.py sfx --prompt "<description>" --duration <s> --out videos/<slug>/audio/sfx/<name>.wav` (add `--kind` from the synth list when no ElevenLabs key is set).
 4. **Music.** If the human supplied a track in `audio/music/`, use it. Otherwise make a placeholder bed covering the total runtime + 5 s: `uv run {project-root}/tools/vt.py music --mood <mood> --duration <s> --out videos/<slug>/audio/music/bed.wav`, and say it is a placeholder and that licensed tracks (e.g. YouTube Audio Library) can be dropped in.

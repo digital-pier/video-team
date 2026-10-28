@@ -83,11 +83,17 @@ def http_post(url: str, headers: dict, payload: dict) -> bytes:
     req = urllib.request.Request(
         url, data=json.dumps(payload).encode(), headers={"Content-Type": "application/json", **headers}
     )
-    try:
-        with urllib.request.urlopen(req, timeout=300) as resp:
-            return resp.read()
-    except urllib.error.HTTPError as e:
-        die(f"{url} -> HTTP {e.code}: {e.read().decode(errors='replace')[:800]}")
+    import time
+
+    for attempt in range(6):
+        try:
+            with urllib.request.urlopen(req, timeout=300) as resp:
+                return resp.read()
+        except urllib.error.HTTPError as e:
+            if e.code in (429, 503) and attempt < 5:  # rate/concurrency limit: back off and retry
+                time.sleep(2 ** attempt * 2)
+                continue
+            die(f"{url} -> HTTP {e.code}: {e.read().decode(errors='replace')[:800]}")
     return b""
 
 
@@ -204,7 +210,7 @@ def cmd_image(a: argparse.Namespace) -> None:
         body = http_post(
             "https://api.openai.com/v1/images/generations",
             {"Authorization": f"Bearer {os.environ['OPENAI_API_KEY']}"},
-            {"model": os.environ.get("OPENAI_IMAGE_MODEL", "gpt-image-1"), "prompt": a.prompt, "size": api_size,
+            {"model": os.environ.get("OPENAI_IMAGE_MODEL", "gpt-image-2"), "prompt": a.prompt, "size": api_size,
              "n": 1},
         )
         data = json.loads(body)["data"][0]
@@ -386,6 +392,38 @@ def caption_chunks(text: str, start: float, dur: float, words_per: int = 8) -> l
     return out
 
 
+BOLD_FONTS = ["/System/Library/Fonts/Supplemental/Arial Black.ttf", "/System/Library/Fonts/Supplemental/Impact.ttf",
+              "/System/Library/Fonts/Supplemental/Arial Bold.ttf", "/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf"]
+
+
+def text_overlay(content: str, out: Path, w: int, h: int, position: str, scale: float) -> None:
+    """Render bold, outlined title text onto a transparent full-frame PNG."""
+    from PIL import Image, ImageDraw, ImageFilter, ImageFont
+
+    size = int(h * 0.085 * scale)
+    path = next((f for f in BOLD_FONTS if Path(f).exists()), None)
+    font = ImageFont.truetype(path, size) if path else ImageFont.load_default()
+    lines = content.split("\n")
+    img = Image.new("RGBA", (w, h), (0, 0, 0, 0))
+    draw = ImageDraw.Draw(img)
+    stroke = max(size // 14, 2)
+    boxes = [draw.textbbox((0, 0), ln, font=font, stroke_width=stroke) for ln in lines]
+    line_h = int(size * 1.2)
+    block_h = line_h * len(lines)
+    y0 = {"top": int(h * 0.1), "bottom": int(h * 0.88) - block_h, "lower-third": int(h * 0.72) - block_h // 2,
+          "left": (h - block_h) // 2, "right": (h - block_h) // 2}.get(position, (h - block_h) // 2)
+    shadow = Image.new("RGBA", (w, h), (0, 0, 0, 0))
+    sdraw = ImageDraw.Draw(shadow)
+    for i, (ln, bb) in enumerate(zip(lines, boxes)):
+        tw = bb[2] - bb[0]
+        x = {"left": int(w * 0.07), "right": int(w * 0.93) - tw}.get(position, (w - tw) // 2)
+        y = y0 + i * line_h
+        sdraw.text((x + size // 16, y + size // 12), ln, font=font, fill=(0, 0, 0, 160))
+        draw.text((x, y), ln, font=font, fill="white", stroke_width=stroke, stroke_fill=(10, 20, 30))
+    out.parent.mkdir(parents=True, exist_ok=True)
+    Image.alpha_composite(shadow.filter(ImageFilter.GaussianBlur(size // 10)), img).save(out)
+
+
 def cmd_render(a: argparse.Namespace) -> None:
     need("ffmpeg")
     vdir = video_dir(a.video)
@@ -448,10 +486,27 @@ def cmd_render(a: argparse.Namespace) -> None:
         else:
             run(["ffmpeg", "-y", "-f", "lavfi", "-i", f"anullsrc=r=48000:cl=stereo", "-t", f"{dur:.3f}", str(aud)])
 
+        # On-screen text: each overlay is a transparent PNG faded in/out over its time window.
+        texts = sc.get("text") or []
+        texts = [texts] if isinstance(texts, dict) else texts
+        ov_inputs, chain, last = [], [], "[0:v]"
+        for j, tx in enumerate(texts):
+            png = work / f"{sid}_t{j}.png"
+            text_overlay(tx["content"], png, w, h, tx.get("position", "center"), tx.get("size", 1.0))
+            ov_inputs += ["-loop", "1", "-i", str(png)]
+            st = float(tx.get("start", 0.3))
+            en = min(float(tx.get("end", dur - 0.3)), dur)
+            k = j + 2  # inputs 0 = video, 1 = audio
+            chain.append(f"[{k}:v]format=rgba,fade=t=in:st={st:.3f}:d=0.3:alpha=1,"
+                         f"fade=t=out:st={max(en - 0.3, st):.3f}:d=0.3:alpha=1[t{j}]")
+            chain.append(f"{last}[t{j}]overlay=0:0:shortest=1[o{j}]")
+            last = f"[o{j}]"
+        chain.append(f"{last}" + (f"fade=t=in:d={fade},fade=t=out:st={max(dur - fade, 0):.3f}:d={fade}"
+                                  if fade else "null") + "[v]")
         seg = work / f"{sid}.mp4"
-        vf = f"fade=t=in:d={fade},fade=t=out:st={max(dur - fade, 0):.3f}:d={fade}" if fade else "null"
-        run(["ffmpeg", "-y", "-i", str(vid), "-i", str(aud), "-vf", vf, "-c:v", "libx264", "-crf", "20",
-             "-pix_fmt", "yuv420p", "-r", str(fps), "-c:a", "aac", "-b:a", "192k", "-shortest", str(seg)])
+        run(["ffmpeg", "-y", "-i", str(vid), "-i", str(aud), *ov_inputs, "-filter_complex", ";".join(chain),
+             "-map", "[v]", "-map", "1:a", "-c:v", "libx264", "-crf", "20", "-pix_fmt", "yuv420p", "-r", str(fps),
+             "-c:a", "aac", "-b:a", "192k", "-t", f"{dur:.3f}", str(seg)])
         segs.append(seg)
         caption = sc.get("caption") or (vo.with_suffix(".txt").read_text().strip()
                                         if vo and vo.with_suffix(".txt").exists() else "")
@@ -542,6 +597,11 @@ def cmd_review(a: argparse.Namespace) -> None:
     latest = renders[-1] if renders else None
     tl_path = vdir / "edit" / "timeline.json"
     scenes = json.loads(tl_path.read_text())["scenes"] if tl_path.exists() else []
+    if not scenes:  # before the edit exists, show whatever stills and VO are on disk
+        scenes = [{"id": im.stem, "visual": (f"clips/preview-{im.stem}.mp4" if (vdir / "clips" / f"preview-{im.stem}.mp4")
+                                             .exists() else f"images/{im.name}"),
+                   **({"vo": f"audio/vo/{im.stem}.wav"} if (vdir / "audio/vo" / f"{im.stem}.wav").exists() else {})}
+                  for im in sorted((vdir / "images").glob("s*.png")) if re.fullmatch(r"s\d+[a-z]?", im.stem)]
     cards = []
     for sc in scenes:
         vis = vdir / sc.get("visual", "")
@@ -556,7 +616,7 @@ def cmd_review(a: argparse.Namespace) -> None:
 <p>{html.escape(txt.read_text()) if txt and txt.exists() else html.escape(sc.get('caption', ''))}</p>
 {f'<audio controls src="{rel(vo)}"></audio>' if vo and vo.exists() else ''}</article>""")
     thumbs = sorted((vdir / "publish").glob("thumbnail*.png"))
-    sfx = sorted((vdir / "audio" / "sfx").glob("*.*")) + sorted((vdir / "audio" / "music").glob("*.*"))
+    sfx = sorted((vdir / "audio" / "vo").glob("audition-*.wav")) + sorted((vdir / "audio" / "sfx").glob("*.*")) + sorted((vdir / "audio" / "music").glob("*.*"))
 
     page = f"""<!doctype html><html><head><meta charset="utf-8"><title>Review — {html.escape(vdir.name)}</title>
 <style>
